@@ -23,7 +23,7 @@ public class CheckInactiveContracts
 	extends GlobalScriptBase
 {
 	static int INET_MID = 15;
-	static String INET_INTERVAL = "6 MONTH";
+	static String INET_INTERVAL = "4 MONTH";
 	static Integer[] CTV_TARIFFS = new Integer[] {76,101,108,109,169,276,282};
 	private static final Logger logger = Logger.getLogger( CheckInactiveContracts.class );
 
@@ -32,13 +32,14 @@ public class CheckInactiveContracts
 		logger.info("BEGIN INACTIVE " + INET_INTERVAL);
 		String query = String.format("SELECT t_cs.cid FROM contract_status t_cs LEFT JOIN contract_module t_cm ON t_cs.cid=t_cm.cid LEFT JOIN contract t_c ON t_cs.cid=t_c.id WHERE t_cm.mid=15 AND (t_cs.date2 IS NULL OR t_cs.date2 > CURDATE()) AND t_cs.status<>0 AND t_cs.date1 < CURDATE() - INTERVAL %s", INET_INTERVAL);
 		Connection connection = connectionSet.getConnection();
-		PreparedStatement preparedStatement = connection.prepareStatement(query);
-		ResultSet resultSet = preparedStatement.executeQuery();
-		while (resultSet.next()) {
-			int cid = resultSet.getInt(1);
-			print(cid);
-			checkTariff(cid, connection);
-			removeInet(cid, connection);
+		try(PreparedStatement preparedStatement = connection.prepareStatement(query);
+		ResultSet resultSet = preparedStatement.executeQuery()) {
+			while (resultSet.next()) {
+				int cid = resultSet.getInt(1);
+				print(cid);
+				checkTariff(cid, connection);
+				removeInet(cid, connection);
+			}
 		}
 		logger.info("END INACTIVE " + INET_INTERVAL);
 	}
