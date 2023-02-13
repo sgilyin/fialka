@@ -97,6 +97,7 @@ public class InetTransfer
 			inetServTo.setId(0);
 			inetServTo.setContractId(CID_TO);
 			inetServTo.setDateFrom(java.util.Date.from(today));
+			inetServTo.setComment("Автоперенос с " + СID_FROM);
 			logger.info(СID_FROM + ": remove " +comment);
 			inetServService.inetServDelete(inetServ.getId(), true);
 			logger.info(CID_TO + ": add " +comment);
