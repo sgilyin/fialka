@@ -122,11 +122,11 @@ public class CheckInactiveContracts
 		InetDeviceService inetDeviceService = serverContext.getService(InetDeviceService.class, INET_MID);
 		List<InetServ> listInetServ = inetServService.inetServList(cid, null);
 		ContractManager contractManager = new ContractManager (connection);
+		String comment = "";
 		for (InetServ inetServ :listInetServ) {
 			InetDevice inetDevice = inetDeviceService.inetDeviceGet(inetServ.getDeviceId());
 			String host = inetDevice.getHost();
 			String interfaceTitle ="";
-			String comment = "";
 			int vlan = 0;
 			switch (inetServ.getTypeTitle()) {
 				case "White-IP":
@@ -164,6 +164,7 @@ public class CheckInactiveContracts
 		ContractModuleManager contractModuleManager = new ContractModuleManager (connection);
 		contractModuleManager.deleteContractModule(cid, INET_MID);
 		ContractParameterManager contractParameterManager = new ContractParameterManager(connection);
+		contractParameterManager.updateStringParam(cid, 56, comment, 0);
 		contractParameterManager.deleteDateParam(cid, 41, 0);
 		contractParameterManager.deleteStringParam(cid, 43, 0);
 		contractManager.deleteContractGroup(cid, 18);
