@@ -164,7 +164,8 @@ public class CheckInactiveContracts
 		ContractModuleManager contractModuleManager = new ContractModuleManager (connection);
 		contractModuleManager.deleteContractModule(cid, INET_MID);
 		ContractParameterManager contractParameterManager = new ContractParameterManager(connection);
-		contractParameterManager.updateStringParam(cid, 56, comment, 0);
+		String stringParam56 = Optional.ofNullable(contractParameterManager.getStringParam(cid, 56)).orElse("");
+		contractParameterManager.updateStringParam(cid, 56, stringParam56 + comment + ';', 0);
 		contractParameterManager.deleteDateParam(cid, 41, 0);
 		contractParameterManager.deleteStringParam(cid, 43, 0);
 		contractManager.deleteContractGroup(cid, 18);

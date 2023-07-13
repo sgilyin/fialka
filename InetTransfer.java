@@ -58,11 +58,11 @@ public class InetTransfer
 		dateTo.setYear(199);
 		inetAccountingPeriod.setDateTo(dateTo);
 		accountingPeriodService.periodUpdate(inetAccountingPeriod);
+		String comment = "";
 		for (InetServ inetServ :listInetServ) {
 			InetDevice inetDevice = inetDeviceService.inetDeviceGet(inetServ.getDeviceId());
 			String host = inetDevice.getHost();
 			String interfaceTitle ="";
-			String comment = "";
 			int vlan = 0;
 			switch (inetServ.getTypeTitle()) {
 				case "White-IP":
@@ -105,6 +105,8 @@ public class InetTransfer
 		}
 		contractModuleManager.deleteContractModule(СID_FROM, INET_MID);
 		ContractParameterManager contractParameterManager = new ContractParameterManager(connection);
+		String stringParam56 = Optional.ofNullable(contractParameterManager.getStringParam(СID_FROM, 56)).orElse("");
+		contractParameterManager.updateStringParam(СID_FROM, 56, stringParam56 + comment + ';', 0);
 		contractParameterManager.deleteDateParam(СID_FROM, 41, 0);
 		contractParameterManager.deleteStringParam(СID_FROM, 43, 0);
 		contractManager.deleteContractGroup(СID_FROM, 18);
